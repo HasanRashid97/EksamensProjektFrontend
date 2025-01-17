@@ -44,8 +44,9 @@ function displayDeliveries(deliveries) {
         if (!delivery.droneId) {
             listItem.classList.add('missing-drone');
             listItem.innerHTML = `
-            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> - 
+            <span class="delivery-id">ID: <strong>${delivery.id}</strong></span> . 
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> | 
+            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> | 
             <span class="status">Status: <strong>Mangler drone</strong></span>
             <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
         `;
