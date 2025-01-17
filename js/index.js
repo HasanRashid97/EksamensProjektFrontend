@@ -19,26 +19,44 @@ function displayDeliveries(deliveries) {
 
     deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
+
     deliveries.forEach(delivery => {
         const listItem = document.createElement('li');
-        const deliveryDate = new Date(delivery.forventetLevering).toLocaleString();
+
+        // Extract the full date and time components
+        const deliveryDateObj = new Date(delivery.forventetLevering);
+
+        // Format the date part (e.g., 17/01/2025)
+        const date = deliveryDateObj.toLocaleDateString('da-DK', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+
+        // Extract and format the time part (e.g., 14:30)
+        const hours = String(deliveryDateObj.getHours()).padStart(2, '0');
+        const minutes = String(deliveryDateObj.getMinutes()).padStart(2, '0');
+        const time = `${hours}:${minutes}`;  // Format as hh:mm
+
+        // Combine both date and time
+        const formattedDateTime = `${date}, ${time}`;
 
         if (!delivery.droneId) {
             listItem.classList.add('missing-drone');
             listItem.innerHTML = `
-                <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-                <span class="expected-time">Forventet: <strong>${deliveryDate}</strong></span> - 
-                <span class="status">Status: <strong>Mangler drone</strong></span>
-                <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
-            `;
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> - 
+            <span class="status">Status: <strong>Mangler drone</strong></span>
+            <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
+        `;
         } else {
             listItem.classList.add('has-drone');
             listItem.innerHTML = `
-                <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-                <span class="expected-time">Forventet: <strong>${deliveryDate}</strong></span> - 
-                <span class="status">Status: <strong>Tildelt drone</strong></span> 
-                <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
-            `;
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> - 
+            <span class="status">Status: <strong>Tildelt drone</strong></span> 
+            <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
+        `;
         }
 
         list.appendChild(listItem);
