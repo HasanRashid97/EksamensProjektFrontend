@@ -53,6 +53,7 @@ function displayDeliveries(deliveries) {
         } else {
             listItem.classList.add('has-drone');
             listItem.innerHTML = `
+            <span class="delivery-id">ID: <strong>${delivery.id}</strong></span> . 
             <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
             <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> - 
             <span class="status">Status: <strong>Tildelt drone</strong></span> 
