@@ -16,18 +16,27 @@ function displayDeliveries(deliveries) {
     const list = document.getElementById('levering-list');
     list.innerHTML = ''; // Ryd listen før vi tilføjer nye elementer
 
-    deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering)); // Sortér efter forventet levering
+    deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
     deliveries.forEach(delivery => {
         const listItem = document.createElement('li');
 
-        // Tilføj class alt efter om der mangler drone eller ej
         if (!delivery.droneId) {
             listItem.classList.add('missing-drone');
-            listItem.innerHTML = `${delivery.pizzaTitel} - Forventet: ${new Date(delivery.forventetLevering).toLocaleString()} - Status: Mangler drone <button onclick="assignDrone(${delivery.id})">Tildel drone</button>`;
+            listItem.innerHTML = `
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+            <span class="expected-time">Forventet: <strong>${new Date(delivery.forventetLevering).toLocaleString()}</strong></span> - 
+            <span class="status">Status: <strong>Mangler drone</strong></span> 
+            <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
+        `;
         } else {
             listItem.classList.add('has-drone');
-            listItem.innerHTML = `${delivery.pizzaTitel} - Forventet: ${new Date(delivery.forventetLevering).toLocaleString()} - Status: Tildelt drone <button onclick="finishDelivery(${delivery.id})">Afslut levering</button>`;
+            listItem.innerHTML = `
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+            <span class="expected-time">Forventet: <strong>${new Date(delivery.forventetLevering).toLocaleString()}</strong></span> - 
+            <span class="status"><strong>Status:<strong> Tildelt drone</strong></span> 
+            <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
+        `;
         }
 
         list.appendChild(listItem);
