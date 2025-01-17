@@ -15,7 +15,7 @@ async function fetchDeliveries() {
 
 function displayDeliveries(deliveries) {
     const list = document.getElementById('levering-list');
-    list.innerHTML = ''; // Clear the list before adding new items
+    list.innerHTML = '';
 
     deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
