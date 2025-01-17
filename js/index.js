@@ -1,116 +1,128 @@
-const apiUrl = 'http://localhost:8080/deliveries'
+const deliveryUrl = 'http://localhost:8080/deliveries';
+const droneUrl = 'http://localhost:8080/drones'
 
-// Funktion til at hente leveringer
+
 async function fetchDeliveries() {
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(deliveryUrl);
         const deliveries = await response.json();
         displayDeliveries(deliveries);
     } catch (error) {
-        console.error('Fejl ved hentning af leveringer:', error);
+        console.error('Error fetching deliveries:', error);
     }
 }
 
-// Funktion til at vise leveringer på skærmen
+
 function displayDeliveries(deliveries) {
     const list = document.getElementById('levering-list');
-    list.innerHTML = ''; // Ryd listen før vi tilføjer nye elementer
+    list.innerHTML = ''; // Clear the list before adding new items
 
     deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
     deliveries.forEach(delivery => {
         const listItem = document.createElement('li');
+        const deliveryDate = new Date(delivery.forventetLevering).toLocaleString();
 
         if (!delivery.droneId) {
             listItem.classList.add('missing-drone');
             listItem.innerHTML = `
-            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-            <span class="expected-time">Forventet: <strong>${new Date(delivery.forventetLevering).toLocaleString()}</strong></span> - 
-            <span class="status">Status: <strong>Mangler drone</strong></span> 
-            <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
-        `;
+                <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+                <span class="expected-time">Forventet: <strong>${deliveryDate}</strong></span> - 
+                <span class="status">Status: <strong>Mangler drone</strong></span>
+                <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
+            `;
         } else {
             listItem.classList.add('has-drone');
             listItem.innerHTML = `
-            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-            <span class="expected-time">Forventet: <strong>${new Date(delivery.forventetLevering).toLocaleString()}</strong></span> - 
-            <span class="status"><strong>Status:<strong> Tildelt drone</strong></span> 
-            <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
-        `;
+                <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
+                <span class="expected-time">Forventet: <strong>${deliveryDate}</strong></span> - 
+                <span class="status"><strong>Status: Tildelt drone</strong></span> 
+                <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
+            `;
         }
 
         list.appendChild(listItem);
     });
 }
 
-// Funktion til at tildele en drone til en levering
+
 async function assignDrone(deliveryId) {
     try {
-        const response = await fetch(`http://localhost:8080/deliveries/schedule?leveringId=${deliveryId}`, { method: 'POST' });
-        const message = await response.text();
-        alert(message);
-        fetchDeliveries(); // Opdater listen efter tildeling af drone
-    } catch (error) {
-        console.error('Fejl ved tildeling af drone:', error);
-    }
-}
-
-// Funktion til at afslutte en levering
-async function finishDelivery(deliveryId) {
-    try {
-        const response = await fetch(`http://localhost:8080/deliveries/finish?leveringId=${deliveryId}`, { method: 'POST' });
+        const response = await fetch(`${deliveryUrl}/schedule?leveringId=${deliveryId}`, { method: 'POST' });
         const message = await response.text();
         alert(message);
         fetchDeliveries();
     } catch (error) {
-        console.error('Fejl ved afslutning af levering:', error);
+        console.error('Error assigning drone:', error);
     }
 }
 
-function fetchDrones() {
-    fetch('http://localhost:8080/drones') // Replace with your actual endpoint
-        .then(response => response.json()) // Assuming the response is in JSON format
-        .then(drones => {
-            const droneList = document.getElementById('drone-list');
-            droneList.innerHTML = ''; // Clear the list first
 
-            drones.forEach(drone => {
-                const li = document.createElement('li');
-                li.textContent = `Drone ID: ${drone.id}, Serienummer: ${drone.serienummer}, Status: ${drone.status}`;
-                droneList.appendChild(li);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching drones:', error);
-        });
+async function finishDelivery(deliveryId) {
+    try {
+        const response = await fetch(`${deliveryUrl}/finish?leveringId=${deliveryId}`, { method: 'POST' });
+        const message = await response.text();
+        alert(message);
+        fetchDeliveries();
+    } catch (error) {
+        console.error('Error finishing delivery:', error);
+    }
 }
 
-// Function to create a new drone by calling the backend API
+
+async function fetchDrones() {
+    try {
+        const response = await fetch(`${droneUrl}`);
+        const drones = await response.json();
+        displayDrones(drones); // Call the function to display drones
+    } catch (error) {
+        console.error('Error fetching drones:', error);
+    }
+}
+
+
+function displayDrones(drones) {
+    const droneList = document.getElementById('drone-list');
+    droneList.innerHTML = ''; // Clear the list first
+
+    drones.forEach(drone => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <span class="drone-id">Drone ID: <strong>${drone.id}</strong></span> - 
+            <span class="drone-serienummer">Serienummer: ${drone.serienummer}</span> - 
+            <span class="drone-status">Status: <strong>${drone.status}</strong></span>
+        `;
+        droneList.appendChild(listItem);
+    });
+}
+
+
 function createDrone() {
-    fetch('http://localhost:8080/drones/add', {
-        method: 'POST'
-    })
+    fetch(`${droneUrl}/add`, { method: 'POST' })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Drone could not be created');
             }
-            return response.json(); // Parse the response body as JSON
+            return response.json();
         })
         .then(data => {
-            alert('Drone created successfully: ' + data.id); // Optionally show a success message
-            console.log(data); // Log the created drone object
-            fetchDrones()
+            alert(`Drone created successfully: ${data.id}`);
+            console.log(data);
+            fetchDrones(); // Refresh drone list
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to create drone'); // Show an error message
+            alert('Failed to create drone');
         });
 }
 
-// Start med at hente leveringer når siden indlæses
-fetchDeliveries();
 
-// Opdater leveringslisten hver 60. sekund
-setInterval(fetchDeliveries, 60000);
-document.getElementById('create-drone-button').addEventListener('click', createDrone);
-document.addEventListener('DOMContentLoaded', fetchDrones);
+function initialize() {
+    fetchDeliveries();
+    fetchDrones();
+    setInterval(fetchDeliveries, 60000);
+    document.getElementById('create-drone-button').addEventListener('click', createDrone);
+}
+
+
+document.addEventListener('DOMContentLoaded', initialize);
