@@ -98,7 +98,7 @@ button:focus {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 15px 30px;
+    padding: 6px 20px;
     font-size: 18px;
     font-weight: bold;
     border-radius: 8px;
@@ -108,6 +108,7 @@ button:focus {
     border: none;
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #create-drone-button img.button-icon {
@@ -152,5 +153,7 @@ button:focus {
     flex-direction: column;
     justify-content: flex-start;
 }
+
+
 
 
