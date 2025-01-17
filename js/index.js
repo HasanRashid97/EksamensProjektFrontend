@@ -74,7 +74,7 @@ async function fetchDrones() {
     try {
         const response = await fetch(`${droneUrl}`);
         const drones = await response.json();
-        displayDrones(drones); // Call the function to display drones
+        displayDrones(drones);
     } catch (error) {
         console.error('Error fetching drones:', error);
     }
@@ -83,7 +83,7 @@ async function fetchDrones() {
 
 function displayDrones(drones) {
     const droneList = document.getElementById('drone-list');
-    droneList.innerHTML = ''; // Clear the list first
+    droneList.innerHTML = '';
 
     drones.forEach(drone => {
         const listItem = document.createElement('li');
@@ -108,7 +108,7 @@ function createDrone() {
         .then(data => {
             alert(`Drone created successfully: ${data.id}`);
             console.log(data);
-            fetchDrones(); // Refresh drone list
+            fetchDrones();
         })
         .catch(error => {
             console.error('Error:', error);
