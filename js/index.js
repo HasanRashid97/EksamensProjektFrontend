@@ -23,7 +23,6 @@ function displayDeliveries(deliveries) {
     deliveries.forEach(delivery => {
         const listItem = document.createElement('li');
 
-        // Extract the full date and time components
         const deliveryDateObj = new Date(delivery.forventetLevering);
 
         // Format the date part (e.g., 17/01/2025)
@@ -33,12 +32,12 @@ function displayDeliveries(deliveries) {
             day: '2-digit'
         });
 
-        // Extract and format the time part (e.g., 14:30)
+
         const hours = String(deliveryDateObj.getHours()).padStart(2, '0');
         const minutes = String(deliveryDateObj.getMinutes()).padStart(2, '0');
-        const time = `${hours}:${minutes}`;  // Format as hh:mm
+        const time = `${hours}:${minutes}`;
 
-        // Combine both date and time
+
         const formattedDateTime = `${date}, ${time}`;
 
         if (!delivery.droneId) {
