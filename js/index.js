@@ -36,7 +36,7 @@ function displayDeliveries(deliveries) {
             listItem.innerHTML = `
                 <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
                 <span class="expected-time">Forventet: <strong>${deliveryDate}</strong></span> - 
-                <span class="status"><strong>Status: Tildelt drone</strong></span> 
+                <span class="status">Status: <strong>Tildelt drone</strong></span> 
                 <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
             `;
         }
