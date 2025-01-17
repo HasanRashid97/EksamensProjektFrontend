@@ -44,21 +44,27 @@ function displayDeliveries(deliveries) {
         if (!delivery.droneId) {
             listItem.classList.add('missing-drone');
             listItem.innerHTML = `
+        <span class="address-header"><strong>Adresse: ${delivery.adresse}</strong></span> <!-- Address as header -->
+        <div class="delivery-details">
             <span class="delivery-id">ID: <strong>${delivery.id}</strong></span> . 
             <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> | 
             <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> | 
             <span class="status">Status: <strong>Mangler drone</strong></span>
-            <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
-        `;
+        </div>
+        <button onclick="assignDrone(${delivery.id})" class="assign-button">Tildel drone</button>
+    `;
         } else {
             listItem.classList.add('has-drone');
             listItem.innerHTML = `
+        <span class="address-header"><strong>Adresse: ${delivery.adresse}</strong></span> <!-- Address as header -->
+        <div class="delivery-details">
             <span class="delivery-id">ID: <strong>${delivery.id}</strong></span> . 
-            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> - 
-            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> - 
+            <span class="pizza-title"><strong>${delivery.pizzaTitel}</strong></span> | 
+            <span class="expected-time">Forventet: <strong>${formattedDateTime}</strong></span> | 
             <span class="status">Status: <strong>Tildelt drone</strong></span> 
-            <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
-        `;
+        </div>
+        <button onclick="finishDelivery(${delivery.id})" class="finish-button">Afslut levering</button>
+    `;
         }
 
         list.appendChild(listItem);
